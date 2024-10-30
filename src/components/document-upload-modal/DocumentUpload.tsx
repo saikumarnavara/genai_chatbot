@@ -10,8 +10,8 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {
   setDocuments,
-  setLoading,
-  setError,
+  // setLoading,
+  // setError,
 } from "../../redux/slices/documents-list-slice";
 import { useDispatch } from "react-redux";
 
