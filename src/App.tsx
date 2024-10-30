@@ -1,12 +1,13 @@
-import './App.css'
-
+import "./App.css";
+import ChatContainer from "./components/chatcontainer/ChatContainer";
+import PersistentDrawerLeft from "./components/Navbar/Navbar";
 function App() {
-
   return (
     <>
-    <h1>Chat bot</h1>
+      <PersistentDrawerLeft />
+      <ChatContainer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
