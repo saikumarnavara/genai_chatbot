@@ -1,7 +1,6 @@
 import Search from "../search/Search";
 import ChatMessages from "./Messages";
 import { Box } from "@mui/material";
-import ListingOfDoc from "../Documents/ListingOfDoc";
 
 const ChatContainer = () => {
   return (
@@ -23,7 +22,6 @@ const ChatContainer = () => {
     >
       <ChatMessages />
       <Search />
-      <ListingOfDoc />
     </Box>
   );
 };
