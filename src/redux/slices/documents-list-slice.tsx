@@ -6,6 +6,7 @@ interface DocumentsState {
   isLoading: boolean;
   error: string | null;
   totalDocuments: number;
+  selectedDoc: string | null;
 }
 
 const initialState: DocumentsState = {
@@ -13,6 +14,7 @@ const initialState: DocumentsState = {
   isLoading: false,
   error: null,
   totalDocuments: 0,
+  selectedDoc: null,
 };
 
 const DocumentsListSlice = createSlice({
@@ -33,10 +35,13 @@ const DocumentsListSlice = createSlice({
       state.totalDocuments = action.payload.total_documents;
       state.isLoading = false;
     },
+    setSelectedDoc(state, action: PayloadAction<string | null>) {
+      state.selectedDoc = action.payload;
+    },
   },
 });
 
-export const { setDocuments, setLoading, setError } =
+export const { setDocuments, setLoading, setError, setSelectedDoc } =
   DocumentsListSlice.actions;
 
 export default DocumentsListSlice;

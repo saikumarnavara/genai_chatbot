@@ -15,6 +15,7 @@ import {
   setDocuments,
   setLoading,
   setError,
+  setSelectedDoc,
 } from "../../redux/slices/documents-list-slice";
 const ListingOfDoc = () => {
   const dispatch = useDispatch();
@@ -57,7 +58,13 @@ const ListingOfDoc = () => {
       <List>
         {documents &&
           documents?.map((documentId: string) => (
-            <ListItem key={documentId} divider>
+            <ListItem
+              key={documentId}
+              divider
+              onClick={() => {
+                dispatch(setSelectedDoc(documentId));
+              }}
+            >
               <ListItemText primary={documentId} />
               <ListItemSecondaryAction>
                 <IconButton edge="end" onClick={() => handleCopy(documentId)}>

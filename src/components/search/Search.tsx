@@ -20,6 +20,7 @@ const Search: React.FC = () => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState<string>("");
   const { isLoading } = useSelector((state: any) => state.chat);
+  const { selectedDoc } = useSelector((state: any) => state.doc_list);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
@@ -33,10 +34,14 @@ const Search: React.FC = () => {
 
     try {
       dispatch(setLoading(true));
-      const response = await ChatService.sendMessage({
-        prompt: searchText,
-      });
+      // const response = await ChatService.sendMessage({
+      //   prompt: searchText,
+      // });
 
+      const response = await ChatService.documentChat({
+        file_id: selectedDoc,
+        question: searchText,
+      });
       dispatch(setCurrentMessage(searchText));
       dispatch(
         addMessage({
