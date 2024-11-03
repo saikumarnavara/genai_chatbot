@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Box, Typography } from "@mui/material";
 import Markdown from "marked-react";
+import SuggestivePrompts from "./SuggestivePrompts";
 
 interface Message {
   message: string;
@@ -9,7 +10,11 @@ interface Message {
 }
 
 const ChatMessages: React.FC = () => {
-  const { messages } = useSelector((state: any) => state.chat);
+  const { messages, prompts } = useSelector((state: any) => state.chat);
+
+  const lastBotMessageIndex = messages
+    .map((msg: Message) => msg.sender)
+    .lastIndexOf("bot");
 
   return (
     <Box
@@ -63,6 +68,9 @@ const ChatMessages: React.FC = () => {
           >
             {msg.sender === "user" ? "You" : "Bot"}
           </Typography>
+          {msg.sender === "bot" &&
+            index === lastBotMessageIndex &&
+            prompts?.length > 0 && <SuggestivePrompts prompts={prompts} />}
         </Box>
       ))}
     </Box>

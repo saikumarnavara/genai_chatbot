@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit/react";
 
-// Define the ChatState interface to specify the state shape and types
 interface ChatState {
   current_message: string;
   isLoading: boolean;
@@ -45,10 +44,18 @@ const chatSlice = createSlice({
       state.messages.push(action.payload);
       state.isLoading = false;
     },
+    setPrompts(state, action: PayloadAction<string[]>) {
+      state.prompts = action.payload;
+    },
   },
 });
 
-export const { setCurrentMessage, setLoading, setError, addMessage } =
-  chatSlice.actions;
+export const {
+  setCurrentMessage,
+  setLoading,
+  setError,
+  addMessage,
+  setPrompts,
+} = chatSlice.actions;
 
 export default chatSlice;

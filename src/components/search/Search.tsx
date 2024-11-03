@@ -6,6 +6,7 @@ import {
   setLoading,
   setError,
   addMessage,
+  setPrompts,
 } from "../../redux/slices/chat-slice";
 import {
   TextField,
@@ -57,6 +58,7 @@ const Search: React.FC = () => {
             sender: "bot",
           })
         );
+        dispatch(setPrompts(response.data.suggested_questions));
         setSearchText("");
       } else {
         console.error("Unexpected response status:", response.status);
@@ -101,7 +103,9 @@ const Search: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={handleSearchClick}
+          onClick={() => {
+            handleSearchClick();
+          }}
           disabled={isLoading}
           sx={{
             height: "56px",

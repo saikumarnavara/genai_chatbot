@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import {
   List,
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
+  Box,
+  Typography,
 } from "@mui/material";
 import {
   Delete as DeleteIcon,
@@ -52,12 +55,27 @@ const ListingOfDoc = () => {
     alert(`Copied ${documentId} to clipboard!`);
   };
 
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const response = await UploadDocument.ListOutTheDocs();
+        if (response.status === 200) {
+          dispatch(setDocuments(response.data));
+        }
+      } catch (error) {
+        console.error("Error fetching documents:", error);
+      }
+    };
+
+    fetchDocuments();
+  }, [dispatch]);
+
   return (
-    <div>
-      <h2>Document List</h2>
+    <Box>
+      <Typography variant="h6">Uploaded Documents</Typography>
       <List>
-        {documents &&
-          documents?.map((documentId: string) => (
+        {documents && documents.length > 0 ? (
+          documents.map((documentId: string) => (
             <ListItem
               key={documentId}
               divider
@@ -79,9 +97,14 @@ const ListingOfDoc = () => {
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>
-          ))}
+          ))
+        ) : (
+          <Typography variant="body2" color="text.secondary" sx={{ p: 2 }}>
+            No uploaded documents
+          </Typography>
+        )}
       </List>
-    </div>
+    </Box>
   );
 };
 
