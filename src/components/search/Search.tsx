@@ -29,7 +29,11 @@ const Search: React.FC = () => {
 
   const handleSearchClick = async () => {
     if (!searchText || searchText.trim() === "") {
-      console.log("Search text cannot be empty.");
+      alert("Search text cannot be empty.");
+      return;
+    }
+    if (!selectedDoc || selectedDoc.trim() === "") {
+      alert("Please select a document.");
       return;
     }
 
@@ -38,19 +42,17 @@ const Search: React.FC = () => {
       // const response = await ChatService.sendMessage({
       //   prompt: searchText,
       // });
-
-      const response = await ChatService.documentChat({
-        file_id: selectedDoc,
-        question: searchText,
-      });
-      dispatch(setCurrentMessage(searchText));
       dispatch(
         addMessage({
           message: searchText,
           sender: "user",
         })
       );
-
+      const response = await ChatService.documentChat({
+        file_id: selectedDoc,
+        question: searchText,
+      });
+      dispatch(setCurrentMessage(searchText));
       if (response.status === 200 && response.data?.response) {
         dispatch(
           addMessage({
@@ -58,6 +60,7 @@ const Search: React.FC = () => {
             sender: "bot",
           })
         );
+        dispatch(setLoading(false));
         dispatch(setPrompts(response.data.suggested_questions));
         setSearchText("");
       } else {

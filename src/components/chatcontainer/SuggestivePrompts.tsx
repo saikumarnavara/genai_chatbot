@@ -17,13 +17,18 @@ interface SuggestivePromptsProps {
 const SuggestivePrompts: React.FC<SuggestivePromptsProps> = ({ prompts }) => {
   const dispatch = useDispatch();
   const { selectedDoc } = useSelector((state: any) => state.doc_list);
+  const removeFirstElement = (str: string) => {
+    const words = str.split(" ");
+    words.shift();
+    return words.join(" ");
+  };
 
   const DispatchPrompt = async (prompt: string) => {
-    dispatch(setLoading(true));
     try {
+      dispatch(setLoading(true));
       dispatch(
         addMessage({
-          message: prompt,
+          message: removeFirstElement(prompt),
           sender: "user",
         })
       );
@@ -41,6 +46,7 @@ const SuggestivePrompts: React.FC<SuggestivePromptsProps> = ({ prompts }) => {
         );
         dispatch(setCurrentMessage(response.data.response));
         dispatch(setPrompts(response.data.suggested_questions || []));
+        dispatch(setLoading(false));
       } else {
         dispatch(setError("Unexpected response from server."));
       }

@@ -42,7 +42,7 @@ const chatSlice = createSlice({
       action: PayloadAction<{ message: string; sender: string }>
     ) {
       state.messages.push(action.payload);
-      state.isLoading = false;
+      // state.isLoading = false;
     },
     setPrompts(state, action: PayloadAction<string[]>) {
       state.prompts = action.payload;

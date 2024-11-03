@@ -1,8 +1,11 @@
 import Search from "../search/Search";
 import ChatMessages from "./Messages";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 
 const ChatContainer = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Box
       sx={{
@@ -10,14 +13,15 @@ const ChatContainer = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        maxWidth: "800px",
+        maxWidth: isMobile ? "100%" : "800px",
         width: "100%",
         margin: "0 auto",
-        p: 2,
-        boxShadow: 3,
-        borderRadius: 2,
+        p: isMobile ? 3 : 3,
+        boxShadow: isMobile ? 1 : 3,
+        borderRadius: isMobile ? 0 : 2,
         bgcolor: "background.paper",
-        marginTop: "40px",
+        marginTop: isMobile ? "70px" : "70px",
+        paddingTop: isMobile ? "0px" : "0px",
       }}
     >
       <ChatMessages />

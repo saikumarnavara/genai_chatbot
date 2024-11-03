@@ -28,8 +28,6 @@ const ListingOfDoc = () => {
   const handleDelete = async (documentId: string) => {
     try {
       dispatch(setLoading(true));
-
-      // Attempt to delete the document
       const response = await UploadDocument.deleteDocument(documentId);
       if (response) {
         const res = await UploadDocument.ListOutTheDocs();
@@ -44,7 +42,6 @@ const ListingOfDoc = () => {
       console.error("Error deleting document:", error);
       dispatch(setError("Error deleting document."));
     } finally {
-      // Ensure loading is turned off after the operation completes
       dispatch(setLoading(false));
     }
   };

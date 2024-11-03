@@ -68,7 +68,11 @@ const DocumentUpload = () => {
       <Dialog open={showModal} onClose={() => setShowModal(false)}>
         <DialogTitle>Upload Document</DialogTitle>
         <DialogContent>
-          <input type="file" onChange={handleFileChange} />
+          <input
+            type="file"
+            onChange={handleFileChange}
+            accept="application/pdf"
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowModal(false)} color="secondary">
