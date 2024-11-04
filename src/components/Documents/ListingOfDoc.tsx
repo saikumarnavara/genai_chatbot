@@ -19,10 +19,12 @@ import {
   setLoading,
   setError,
   setSelectedDoc,
+  clearSelectedDoc,
 } from "../../redux/slices/documents-list-slice";
+import Loader from "../loader/Loader";
 const ListingOfDoc = () => {
   const dispatch = useDispatch();
-  const { documents } = useSelector((state: any) => state.doc_list);
+  const { documents, isLoading } = useSelector((state: any) => state.doc_list);
 
   // Handle delete document
   const handleDelete = async (documentId: string) => {
@@ -30,6 +32,7 @@ const ListingOfDoc = () => {
       dispatch(setLoading(true));
       const response = await UploadDocument.deleteDocument(documentId);
       if (response) {
+        dispatch(clearSelectedDoc(documentId));
         const res = await UploadDocument.ListOutTheDocs();
         if (res.status === 200) {
           dispatch(setDocuments(res.data));
@@ -101,6 +104,7 @@ const ListingOfDoc = () => {
           </Typography>
         )}
       </List>
+      {isLoading && <Loader />}
     </Box>
   );
 };

@@ -4,10 +4,7 @@ const Loader = () => {
   const loaderFlag = true;
   return (
     <>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loaderFlag}
-      >
+      <Backdrop sx={{ color: "#fff", zIndex: 999 }} open={loaderFlag}>
         <ColorRing
           visible={true}
           height="80"

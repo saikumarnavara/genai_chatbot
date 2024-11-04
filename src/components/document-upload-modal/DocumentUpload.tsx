@@ -75,6 +75,7 @@ const DocumentUpload = () => {
             onChange={handleFileChange}
             accept="application/pdf"
           />
+          {isLoading && <Loader />}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowModal(false)} color="secondary">
@@ -85,7 +86,6 @@ const DocumentUpload = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {isLoading && <Loader />}
     </div>
   );
 };

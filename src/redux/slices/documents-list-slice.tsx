@@ -38,10 +38,20 @@ const DocumentsListSlice = createSlice({
     setSelectedDoc(state, action: PayloadAction<string | null>) {
       state.selectedDoc = action.payload;
     },
+    clearSelectedDoc(state, action: PayloadAction<string | null>) {
+      if (state.selectedDoc === action.payload) {
+        state.selectedDoc = null;
+      }
+    },
   },
 });
 
-export const { setDocuments, setLoading, setError, setSelectedDoc } =
-  DocumentsListSlice.actions;
+export const {
+  setDocuments,
+  setLoading,
+  setError,
+  setSelectedDoc,
+  clearSelectedDoc,
+} = DocumentsListSlice.actions;
 
 export default DocumentsListSlice;
