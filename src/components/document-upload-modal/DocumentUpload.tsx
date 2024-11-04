@@ -10,15 +10,17 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {
   setDocuments,
-  // setLoading,
+  setLoading,
   // setError,
 } from "../../redux/slices/documents-list-slice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../loader/Loader";
 
 const DocumentUpload = () => {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const { isLoading } = useSelector((state: any) => state.doc_list);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -29,15 +31,15 @@ const DocumentUpload = () => {
   const handleUpload = async () => {
     if (selectedFile) {
       try {
+        dispatch(setLoading(true));
         const formData = new FormData();
         formData.append("sourceFile", selectedFile, selectedFile.name);
 
         const response = await UploadDocument.uploadFile(formData);
         if (response.status === 200) {
-          alert("File uploaded successfully!");
           setShowModal(false);
           setSelectedFile(null);
-
+          alert("File uploaded successfully!");
           // Fetch and update the list of documents
           const documentsResponse = await UploadDocument.ListOutTheDocs();
           if (documentsResponse.status === 200) {
@@ -83,6 +85,7 @@ const DocumentUpload = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {isLoading && <Loader />}
     </div>
   );
 };
