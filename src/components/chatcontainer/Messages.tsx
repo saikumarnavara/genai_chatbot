@@ -1,6 +1,15 @@
 import React, { useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Markdown from "marked-react";
 import SuggestivePrompts from "./SuggestivePrompts";
 
@@ -24,7 +33,13 @@ const ChatMessages: React.FC = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages, prompts]); // Depend on both messages and prompts
+  }, [messages, prompts]);
+
+  // Copy message to clipboard
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    alert("Message copied to clipboard!"); // Optional feedback
+  };
 
   return (
     <Box
@@ -53,13 +68,16 @@ const ChatMessages: React.FC = () => {
         >
           <Box
             sx={{
+              display: "flex",
+              alignItems: "center",
               maxWidth: isMobile ? "90%" : { sm: "75%", md: "70%" },
               px: 1.5,
               py: 0.5,
               borderRadius: 1,
-              bgcolor: msg.sender === "user" ? "primary.main" : "grey.300",
-              color:
-                msg.sender === "user" ? "primary.contrastText" : "text.primary",
+              bgcolor: msg.sender === "user" ? "#8C8C8C" : "grey.300",
+              color: msg.sender === "user" ? "#2E2E2E" : "#2E2E2E",
+              position: "relative",
+              flexDirection: "column",
             }}
             ref={index === messages.length - 1 ? messagesEndRef : null}
           >
@@ -73,6 +91,29 @@ const ChatMessages: React.FC = () => {
             >
               <Markdown>{msg.message}</Markdown>
             </Typography>
+            {msg.sender === "bot" && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                  mt: 0.5,
+                }}
+              >
+                <IconButton size="small">
+                  <ThumbUpAltIcon fontSize="small" />
+                </IconButton>
+                <IconButton size="small">
+                  <ThumbDownAltIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={() => handleCopy(msg.message)}
+                >
+                  <ContentCopyIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            )}
           </Box>
           <Typography
             variant="caption"

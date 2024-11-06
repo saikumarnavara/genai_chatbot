@@ -8,14 +8,9 @@ import {
   addMessage,
   setPrompts,
 } from "../../redux/slices/chat-slice";
-import {
-  TextField,
-  Button,
-  Box,
-  CircularProgress,
-  InputAdornment,
-} from "@mui/material";
+import { TextField, Button, Box, InputAdornment } from "@mui/material";
 import DocumentUpload from "../document-upload-modal/DocumentUpload";
+import LoadingDots from "../loading-dots/LoadingDots";
 
 const Search: React.FC = () => {
   const dispatch = useDispatch();
@@ -90,7 +85,7 @@ const Search: React.FC = () => {
         }}
       >
         <TextField
-          label="Enter search text"
+          label="Enter prompt to search..."
           variant="outlined"
           value={searchText}
           onChange={handleSearchChange}
@@ -101,21 +96,46 @@ const Search: React.FC = () => {
                 <DocumentUpload />
               </InputAdornment>
             ),
+            sx: {
+              "& .MuiOutlinedInput-root": {
+                color: "#000",
+                "& fieldset": {
+                  borderColor: "#000",
+                },
+                "&:hover fieldset": {
+                  borderColor: "grey",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#000 !important",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "#000",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#000 !important",
+              },
+            },
           }}
         />
         <Button
           variant="contained"
-          color="primary"
-          onClick={() => {
-            handleSearchClick();
-          }}
+          onClick={handleSearchClick}
           disabled={isLoading}
           sx={{
             height: "56px",
             minWidth: "100px",
+            backgroundColor: "#1A1A1A",
+            color: "#fff",
+            "&:hover": {
+              backgroundColor: "#A1A1A1",
+            },
+            "&:disabled": {
+              backgroundColor: "#333",
+            },
           }}
         >
-          {isLoading ? <CircularProgress size={24} /> : "Search"}
+          {isLoading ? <LoadingDots /> : "Search"}
         </Button>
       </Box>
     </>

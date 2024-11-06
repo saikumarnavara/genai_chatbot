@@ -70,7 +70,7 @@ const SuggestivePrompts: React.FC<SuggestivePromptsProps> = ({ prompts }) => {
       }}
     >
       <Typography>
-        <b>Suggestive Prompts</b>
+        <b>Chat Suggestions</b>
       </Typography>
       {prompts
         .filter((prompt) => prompt.trim() !== "")
