@@ -8,10 +8,7 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import {
-  Delete as DeleteIcon,
-  FileCopy as CopyIcon,
-} from "@mui/icons-material";
+import { Delete as DeleteIcon } from "@mui/icons-material";
 import { UploadDocument } from "../../services/upload-document-service";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -22,6 +19,7 @@ import {
   clearSelectedDoc,
 } from "../../redux/slices/documents-list-slice";
 import Loader from "../loader/Loader";
+
 const ListingOfDoc = () => {
   const dispatch = useDispatch();
   const { documents, isLoading } = useSelector((state: any) => state.doc_list);
@@ -49,20 +47,16 @@ const ListingOfDoc = () => {
     }
   };
 
-  // Handle copy document name
-  const handleCopy = (documentId: string) => {
-    navigator.clipboard.writeText(documentId);
-    alert(`Copied ${documentId} to clipboard!`);
-  };
-
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
+        dispatch(setLoading(true));
         const response = await UploadDocument.ListOutTheDocs();
         if (response.status === 200) {
           dispatch(setDocuments(response.data));
         }
       } catch (error) {
+        dispatch(setLoading(false));
         console.error("Error fetching documents:", error);
       }
     };
@@ -70,10 +64,18 @@ const ListingOfDoc = () => {
     fetchDocuments();
   }, [dispatch]);
 
+  useEffect(() => {
+    if (documents && documents.length > 0) {
+      dispatch(setSelectedDoc(documents[0]));
+    }
+  }, [documents]);
+
   return (
-    <Box>
-      <Typography variant="h6">Uploaded Documents</Typography>
-      <List>
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Uploaded Documents
+      </Typography>
+      <List sx={{ width: "100%" }}>
         {documents && documents.length > 0 ? (
           documents.map((documentId: string) => (
             <ListItem
@@ -82,12 +84,29 @@ const ListingOfDoc = () => {
               onClick={() => {
                 dispatch(setSelectedDoc(documentId));
               }}
+              sx={{
+                cursor: "pointer",
+                backgroundColor: "background.paper",
+                boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)",
+                borderRadius: 1,
+                transition: "transform 0.2s, box-shadow 0.2s",
+                mb: 1,
+                "&:hover": {
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
+                  transform: "scale(1.02)",
+                },
+                padding: 2,
+              }}
             >
-              <ListItemText primary={documentId} />
+              <ListItemText
+                primary={documentId}
+                primaryTypographyProps={{
+                  variant: "body1",
+                  fontWeight: "500",
+                  color: "text.primary",
+                }}
+              />
               <ListItemSecondaryAction>
-                <IconButton edge="end" onClick={() => handleCopy(documentId)}>
-                  <CopyIcon />
-                </IconButton>
                 <IconButton
                   edge="end"
                   color="secondary"

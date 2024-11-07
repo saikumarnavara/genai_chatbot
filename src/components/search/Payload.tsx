@@ -9,7 +9,7 @@ interface PayloadResponse {
 
 export const ReturnPayload = (
   searchType: SearchType,
-  search_query: string,
+  search_query: string | any,
   file?: any,
   fileName?: string
 ): PayloadResponse | undefined => {

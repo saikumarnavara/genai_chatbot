@@ -9,6 +9,7 @@ import {
   addMessage,
   setPrompts,
 } from "../../redux/slices/chat-slice";
+import { ReturnPayload } from "../search/Payload";
 
 interface SuggestivePromptsProps {
   prompts: string[];
@@ -17,6 +18,8 @@ interface SuggestivePromptsProps {
 const SuggestivePrompts: React.FC<SuggestivePromptsProps> = ({ prompts }) => {
   const dispatch = useDispatch();
   const { selectedDoc } = useSelector((state: any) => state.doc_list);
+  const { searchType } = useSelector((state: any) => state.search_type);
+
   const removeFirstElement = (str: string) => {
     const words = str.split(" ");
     words.shift();
@@ -32,10 +35,15 @@ const SuggestivePrompts: React.FC<SuggestivePromptsProps> = ({ prompts }) => {
           sender: "user",
         })
       );
-      const response = await ChatService.documentChat({
-        file_id: selectedDoc,
-        question: prompt,
-      });
+      let image = "";
+      let customizedPayload = ReturnPayload(
+        searchType,
+        prompt,
+        image,
+        selectedDoc
+      );
+
+      const response = await ChatService.geminiSearch(customizedPayload);
 
       if (response.status === 200 && response.data?.response) {
         dispatch(
@@ -47,12 +55,13 @@ const SuggestivePrompts: React.FC<SuggestivePromptsProps> = ({ prompts }) => {
         dispatch(setCurrentMessage(response.data.response));
         dispatch(setPrompts(response.data.suggested_questions || []));
         dispatch(setLoading(false));
-      } else {
-        dispatch(setError("Unexpected response from server."));
       }
     } catch (error) {
       console.error("Error in DispatchPrompt:", error);
       dispatch(setError("Failed to fetch response. Please try again."));
+      dispatch(
+        addMessage({ message: "Failed to fetch response", sender: "bot" })
+      );
     } finally {
       dispatch(setLoading(false));
     }

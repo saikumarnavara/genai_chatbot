@@ -11,12 +11,12 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-
 import ListingOfDoc from "../Documents/ListingOfDoc";
 import SelectedDocuments from "../Documents/SelectedDocuments";
 import { useSelector } from "react-redux";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -24,31 +24,25 @@ interface AppBarProps extends MuiAppBarProps {
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme }) => ({
+})<AppBarProps>(({ theme, open }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(["margin", "width"], {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-      },
-    },
-  ],
+  ...(open && {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: `${drawerWidth}px`,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
 }));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
 }));
@@ -56,6 +50,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function PersistentDrawerLeft() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { selectedDoc } = useSelector((state: any) => state?.doc_list);
 
   const handleDrawerOpen = () => {
@@ -77,6 +72,7 @@ export default function PersistentDrawerLeft() {
           color: "#fff",
           boxShadow: "none",
           borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+          width: "100%",
         }}
       >
         <Toolbar>
@@ -85,12 +81,10 @@ export default function PersistentDrawerLeft() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={[
-              {
-                mr: 2,
-              },
-              open && { display: "none" },
-            ]}
+            sx={{
+              mr: 2,
+              ...(open && { display: "none" }),
+            }}
           >
             <MenuIcon />
           </IconButton>
@@ -101,16 +95,20 @@ export default function PersistentDrawerLeft() {
       </AppBar>
       <Drawer
         sx={{
-          width: drawerWidth,
+          width: isMobile ? "80%" : drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: drawerWidth,
+            width: isMobile ? "80%" : drawerWidth,
             boxSizing: "border-box",
           },
         }}
-        variant="persistent"
+        variant="temporary"
         anchor="left"
         open={open}
+        onClose={handleDrawerClose}
+        ModalProps={{
+          keepMounted: true,
+        }}
       >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
@@ -122,10 +120,10 @@ export default function PersistentDrawerLeft() {
           </IconButton>
         </DrawerHeader>
         <Divider />
-
-        <Divider />
-        <ListingOfDoc />
-        {selectedDoc && <SelectedDocuments file={selectedDoc} />}
+        <Box sx={{ width: "100%", padding: 1 }}>
+          <ListingOfDoc />
+          {selectedDoc && <SelectedDocuments file={selectedDoc} />}
+        </Box>
       </Drawer>
     </Box>
   );
