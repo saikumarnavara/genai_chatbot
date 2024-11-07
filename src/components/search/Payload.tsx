@@ -1,4 +1,4 @@
-type SearchType = "textsearch" | "multimodel" | "documentsearch";
+type SearchType = "textsearch" | "multimodal" | "documentsearch";
 
 interface PayloadResponse {
   payload: FormData | Record<string, any>;
@@ -25,7 +25,7 @@ export const ReturnPayload = (
         serviceName: "textSearch",
       };
 
-    case "multimodel":
+    case "multimodal":
       const fileData = new FormData();
       fileData.append("image", file);
       return {

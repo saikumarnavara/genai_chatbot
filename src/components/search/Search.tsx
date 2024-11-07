@@ -28,6 +28,9 @@ const Search: React.FC = () => {
     selectedDoc
   );
 
+  // console.log("payload", customizedPayload);
+  // console.log(multiModalImg, "img");
+
   const handleMultiModalImg = (img: any) => {
     if (img) {
       setMultiModalImg(img);
