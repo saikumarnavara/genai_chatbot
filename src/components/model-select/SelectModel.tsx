@@ -1,17 +1,14 @@
-import React, { FC } from "react";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import { FC } from "react";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearchType } from "../../redux/slices/search-type-slice";
 
 const SelectModel: FC = () => {
-  const [model, setModel] = React.useState<string>("multimodel");
+  const dispatch = useDispatch();
+  const { searchType } = useSelector((state: any) => state.search_type);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setModel(event.target.value as string);
+  const handleChange = (event: any) => {
+    dispatch(setSearchType(event.target.value));
   };
 
   return (
@@ -20,12 +17,13 @@ const SelectModel: FC = () => {
       <Select
         labelId="select-model-label"
         id="select-model"
-        value={model}
+        value={searchType}
         label="Select Model"
         onChange={handleChange}
       >
+        <MenuItem value="textsearch">Text Search</MenuItem>
         <MenuItem value="multimodel">Multimodel</MenuItem>
-        <MenuItem value="documentSearch">Document Search</MenuItem>
+        <MenuItem value="documentsearch">Document Search</MenuItem>
       </Select>
     </FormControl>
   );

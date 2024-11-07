@@ -12,7 +12,7 @@ const LoadingDots = () => {
           height: "8px",
           margin: "0 4px",
           borderRadius: "50%",
-          backgroundColor: "#000",
+          backgroundColor: "#fff",
           animation: "loadingDots 0.6s infinite alternate",
         },
         "& div:nth-of-type(1)": { animationDelay: "0s" },

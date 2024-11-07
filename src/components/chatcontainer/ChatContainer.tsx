@@ -43,7 +43,7 @@ const ChatContainer = () => {
           justifyContent: "center",
           maxWidth: isMobile ? "100%" : "800px",
           width: "100%",
-          margin: isMobile ? "0 auto" : "0 0 0 16px", // Margin for spacing on desktop
+          margin: isMobile ? "0 auto" : "0 0 0 16px", 
           p: isMobile ? 3 : 3,
           boxShadow: isMobile ? 1 : 3,
           borderRadius: isMobile ? 0 : 2,

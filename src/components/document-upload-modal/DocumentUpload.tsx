@@ -15,6 +15,7 @@ import {
 } from "../../redux/slices/documents-list-slice";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../loader/Loader";
+import { IconButton } from "@mui/material";
 
 const DocumentUpload = () => {
   const dispatch = useDispatch();
@@ -61,11 +62,15 @@ const DocumentUpload = () => {
 
   return (
     <div>
-      <UploadFileIcon
-        color="primary"
-        style={{ cursor: "pointer" }}
-        onClick={() => setShowModal(true)}
-      />
+      <IconButton onClick={() => setShowModal(true)}>
+        <UploadFileIcon
+          sx={{
+            color: "#000",
+            cursor: "pointer",
+            fontSize: "1.5rem",
+          }}
+        />
+      </IconButton>
 
       <Dialog open={showModal} onClose={() => setShowModal(false)}>
         <DialogTitle>Upload Document</DialogTitle>

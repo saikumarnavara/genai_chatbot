@@ -10,43 +10,57 @@ import {
 } from "../../redux/slices/chat-slice";
 import { TextField, Button, Box, InputAdornment } from "@mui/material";
 import DocumentUpload from "../document-upload-modal/DocumentUpload";
+import ImageUpload from "../document-upload-modal/ImageUpload";
 import LoadingDots from "../loading-dots/LoadingDots";
+import SearchIcon from "@mui/icons-material/Search";
+import { ReturnPayload } from "./Payload";
 
 const Search: React.FC = () => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState<string>("");
   const { isLoading } = useSelector((state: any) => state.chat);
   const { selectedDoc } = useSelector((state: any) => state.doc_list);
+  const { searchType, multimodalImage } = useSelector(
+    (state: any) => state.search_type
+  );
+  // console.log(searchType, "searchType");
+  let customizedPayload = ReturnPayload(
+    searchType,
+    searchText,
+    multimodalImage.url,
+    selectedDoc
+  );
+  // console.log(customizedPayload, "payload");
+  // console.log(multimodalImage, "image");
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
   };
 
   const handleSearchClick = async () => {
-    if (!searchText || searchText.trim() === "") {
-      alert("Search text cannot be empty.");
-      return;
-    }
-    if (!selectedDoc || selectedDoc.trim() === "") {
-      alert("Please select a document.");
-      return;
-    }
+    // if (!searchText || searchText.trim() === "") {
+    //   alert("Search text cannot be empty.");
+    //   return;
+    // }
+    // if (
+    //   (selectedDoc === "documentsearch" && !selectedDoc) ||
+    //   selectedDoc.trim() === ""
+    // ) {
+    //   alert("Please select a document.");
+    //   return;
+    // }
 
     try {
       dispatch(setLoading(true));
-      // const response = await ChatService.sendMessage({
-      //   prompt: searchText,
-      // });
       dispatch(
         addMessage({
           message: searchText,
           sender: "user",
         })
       );
-      const response = await ChatService.documentChat({
-        file_id: selectedDoc,
-        question: searchText,
-      });
+
+      let response = await ChatService.geminiSearch(customizedPayload);
+
       dispatch(setCurrentMessage(searchText));
       if (response.status === 200 && response.data?.response) {
         dispatch(
@@ -56,7 +70,7 @@ const Search: React.FC = () => {
           })
         );
         dispatch(setLoading(false));
-        dispatch(setPrompts(response.data.suggested_questions));
+        dispatch(setPrompts(response.data?.suggested_questions));
         setSearchText("");
       } else {
         console.error("Unexpected response status:", response.status);
@@ -85,7 +99,7 @@ const Search: React.FC = () => {
         }}
       >
         <TextField
-          label="Enter prompt to search..."
+          label="Enter prompt..."
           variant="outlined"
           value={searchText}
           onChange={handleSearchChange}
@@ -94,6 +108,7 @@ const Search: React.FC = () => {
             endAdornment: (
               <InputAdornment position="end">
                 <DocumentUpload />
+                <ImageUpload />
               </InputAdornment>
             ),
             sx: {
@@ -124,7 +139,7 @@ const Search: React.FC = () => {
           disabled={isLoading}
           sx={{
             height: "56px",
-            minWidth: "100px",
+            minWidth: "56px",
             backgroundColor: "#1A1A1A",
             color: "#fff",
             "&:hover": {
@@ -135,7 +150,7 @@ const Search: React.FC = () => {
             },
           }}
         >
-          {isLoading ? <LoadingDots /> : "Search"}
+          {isLoading ? <LoadingDots /> : <SearchIcon />}
         </Button>
       </Box>
     </>
