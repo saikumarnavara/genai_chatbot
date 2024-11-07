@@ -10,7 +10,7 @@ interface PayloadResponse {
 export const ReturnPayload = (
   searchType: SearchType,
   search_query: string,
-  file?: string,
+  file?: any,
   fileName?: string
 ): PayloadResponse | undefined => {
   switch (searchType) {
@@ -27,7 +27,7 @@ export const ReturnPayload = (
 
     case "multimodel":
       const fileData = new FormData();
-      fileData.append("image", file || "");
+      fileData.append("image", file);
       return {
         payload: fileData,
         endpoint: `multimodal-search/?prompt=${search_query}`,

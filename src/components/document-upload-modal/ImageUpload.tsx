@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Modal, Box, Button, Typography, IconButton } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
-import { useDispatch } from "react-redux";
-import { setMultimodalImage } from "../../redux/slices/search-type-slice";
+// import { useDispatch } from "react-redux";
+// import { setMultimodalImage } from "../../redux/slices/search-type-slice";
 
 // Define styles for the modal
 const modalStyle = {
@@ -16,8 +16,8 @@ const modalStyle = {
   p: 4,
 };
 
-const ImageUpload = () => {
-  const dispatch = useDispatch();
+const ImageUpload = ({ handleImg }: any) => {
+  // const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -35,8 +35,9 @@ const ImageUpload = () => {
 
   const handleUpload = () => {
     if (selectedFile) {
-      const fileUrl = URL.createObjectURL(selectedFile);
-      dispatch(setMultimodalImage({ url: fileUrl, name: selectedFile.name }));
+      // const fileUrl = URL.createObjectURL(selectedFile);
+      // dispatch(setMultimodalImage({ url: fileUrl, name: selectedFile.name }));
+      handleImg(selectedFile);
       handleClose();
     }
   };

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentMessage,
   setLoading,
-  setError,
   addMessage,
   setPrompts,
 } from "../../redux/slices/chat-slice";
@@ -18,37 +17,43 @@ import { ReturnPayload } from "./Payload";
 const Search: React.FC = () => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState<string>("");
+  const [multiModalImg, setMultiModalImg] = useState(null);
   const { isLoading } = useSelector((state: any) => state.chat);
   const { selectedDoc } = useSelector((state: any) => state.doc_list);
-  const { searchType, multimodalImage } = useSelector(
-    (state: any) => state.search_type
-  );
-  // console.log(searchType, "searchType");
+  const { searchType } = useSelector((state: any) => state.search_type);
   let customizedPayload = ReturnPayload(
     searchType,
     searchText,
-    multimodalImage.url,
+    multiModalImg,
     selectedDoc
   );
-  // console.log(customizedPayload, "payload");
-  // console.log(multimodalImage, "image");
+
+  const handleMultiModalImg = (img: any) => {
+    if (img) {
+      setMultiModalImg(img);
+    }
+  };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
   };
 
   const handleSearchClick = async () => {
-    // if (!searchText || searchText.trim() === "") {
-    //   alert("Search text cannot be empty.");
-    //   return;
-    // }
-    // if (
-    //   (selectedDoc === "documentsearch" && !selectedDoc) ||
-    //   selectedDoc.trim() === ""
-    // ) {
-    //   alert("Please select a document.");
-    //   return;
-    // }
+    if (searchType === "textsearch" && searchText.length === 0) {
+      alert("Please enter a text.");
+      return;
+    }
+    if (
+      (searchType === "multimodal" && !multiModalImg) ||
+      searchText.length === 0
+    ) {
+      alert("Please upload an image and write prompt ");
+      return;
+    }
+    if (searchType === "documentsearch" && !selectedDoc) {
+      alert("Please select a document.");
+      return;
+    }
 
     try {
       dispatch(setLoading(true));
@@ -72,15 +77,15 @@ const Search: React.FC = () => {
         dispatch(setLoading(false));
         dispatch(setPrompts(response.data?.suggested_questions));
         setSearchText("");
-      } else {
-        console.error("Unexpected response status:", response.status);
       }
     } catch (error: any) {
       console.error("Error occurred:", error.message || error);
-      if (error.response) {
-        console.error("Server response:", error.response.data);
-        dispatch(setError(error.response.data.error || "An error occurred"));
-      }
+      dispatch(
+        addMessage({
+          message: error.message,
+          sender: "bot",
+        })
+      );
     } finally {
       dispatch(setLoading(false));
     }
@@ -107,8 +112,11 @@ const Search: React.FC = () => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <DocumentUpload />
-                <ImageUpload />
+                {searchType === "multimodal" ? (
+                  <ImageUpload handleImg={handleMultiModalImg} />
+                ) : searchType === "documentsearch" ? (
+                  <DocumentUpload />
+                ) : null}
               </InputAdornment>
             ),
             sx: {

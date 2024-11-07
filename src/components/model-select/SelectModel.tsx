@@ -22,7 +22,7 @@ const SelectModel: FC = () => {
         onChange={handleChange}
       >
         <MenuItem value="textsearch">Text Search</MenuItem>
-        <MenuItem value="multimodel">Multimodel</MenuItem>
+        <MenuItem value="multimodal">Multimodal</MenuItem>
         <MenuItem value="documentsearch">Document Search</MenuItem>
       </Select>
     </FormControl>
